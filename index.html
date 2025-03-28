@@ -13,7 +13,8 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #000000;
+            color: #ffffff;
         }
         #endTimeSelector {
             margin-top: 20px;
@@ -31,20 +32,28 @@
 </head>
 <body>
     <input type="time" id="endTimeSelector" step="60" min="00:00" max="23:59" value="17:00">
+    <button id="hideButton">I don't need an end time</button>
+    <button id="hideSelector">Hide time selector</button>
+
     <div id="timeDisplay">
-        <div id="currentTime">Current: 16:23:15</div>
-        <div id="remainingTime">Remaining: 00:36:44</div>
+        <div id="currentText">Current: </div><div id="currentTime">16:23:15</div>
+        <div id="remainingText">Remaining: </div><div id="remainingTime">00:36:44</div>
     </div>
 
     <script>
         const endTimeSelector = document.getElementById('endTimeSelector');
         const currentTimeDisplay = document.getElementById('currentTime');
         const remainingTimeDisplay = document.getElementById('remainingTime');
+        const hideButton = document.getElementById('hideButton');
+        const hideSelector = document.getElementById('hideSelector');
+        const currentText = document.getElementById('currentText');
+        const remainingText = document.getElementById('remainingText');
+
 
         function updateTime() {
             const now = new Date();
             const currentTime = now.toLocaleTimeString('es-ES', { hour12: false });
-            currentTimeDisplay.textContent = `Current: ${currentTime}`;
+            currentTimeDisplay.textContent = `${currentTime}`;
 
             const endTime = endTimeSelector.value;
             if (endTime) {
@@ -63,11 +72,26 @@
                     seconds = Math.floor((diff % 60000) / 1000);
                 }
 
-                remainingTimeDisplay.textContent = `Remaining: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                remainingTimeDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             } else {
                 remainingTimeDisplay.textContent = 'Please select an end time';
             }
         }
+
+        hideButton.addEventListener('click', () => {
+            endTimeSelector.style.display = 'none';
+            currentText.style.display = 'none';
+            remainingText.style.display = 'none';
+            remainingTimeDisplay.style.display = 'none';
+            hideButton.style.display = 'none';
+            hideSelector.style.display = 'none';
+        });
+
+        hideSelector.addEventListener('click', () => {
+            endTimeSelector.style.display = 'none';
+            hideSelector.style.display = 'none';
+            hideButton.style.display = 'none';
+        });
 
         endTimeSelector.addEventListener('change', updateTime);
         setInterval(updateTime, 1000);
